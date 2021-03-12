@@ -67,7 +67,7 @@ type configLoggerType = {
   levels?: levelsType;
   async?: boolean;
   asyncFunc?: Function;
-  dateFormat?: "time" | "local" | "utc" | "iso";
+  dateFormat?: "time" | "local" | "utc" | "iso" | "custom";
   printLevel?: boolean;
   printDate?: boolean;
   enabled?: boolean;
@@ -264,6 +264,11 @@ class logs {
     return true;
   };
 
+  private _formatConsoleDate = (date: Date): string => {
+    const dateFormat = require('dateformat');
+    return dateFormat(date, 'ddd, mmm d, yyyy, h:MM:ss:l TT');
+  };
+  
   private _formatMsg = (
     level: string,
     extension: string | null,
@@ -288,6 +293,9 @@ class logs {
           break;
         case "iso":
           dateTxt = `${new Date().toISOString()} | `;
+          break;
+        case "custom":
+          dateTxt = `${this._formatConsoleDate(new Date())} | `;
           break;
         default:
           break;
